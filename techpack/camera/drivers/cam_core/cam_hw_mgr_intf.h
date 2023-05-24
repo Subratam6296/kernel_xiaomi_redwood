@@ -292,6 +292,7 @@ struct cam_hw_flush_args {
 	void                           *flush_req_pending[40];
 	uint32_t                        num_req_active;
 	void                           *flush_req_active[40];
+
 	enum flush_type_t               flush_type;
 	uint32_t                        last_flush_req;
 };
