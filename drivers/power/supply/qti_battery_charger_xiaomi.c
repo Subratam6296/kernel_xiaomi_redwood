@@ -2687,6 +2687,40 @@ static ssize_t fg1_soh_show(struct class *c, struct class_attribute *attr,
 }
 static CLASS_ATTR_RO(fg1_soh);
 
+#if defined(CONFIG_AI_RSOC_M20)
+static ssize_t fg1_rsoc_show(struct class *c,
+					struct class_attribute *attr, char *buf)
+{
+	struct battery_chg_dev *bcdev = container_of(c, struct battery_chg_dev,
+						battery_class);
+	struct psy_state *pst = &bcdev->psy_list[PSY_TYPE_XM];
+	int rc;
+
+	rc = read_property_id(bcdev, pst, XM_PROP_FG1_RSOC);
+	if (rc < 0)
+		return rc;
+
+	return scnprintf(buf, PAGE_SIZE, "%d\n", pst->prop[XM_PROP_FG1_RSOC]);
+}
+static CLASS_ATTR_RO(fg1_rsoc);
+
+static ssize_t fg1_ai_show(struct class *c,
+					struct class_attribute *attr, char *buf)
+{
+	struct battery_chg_dev *bcdev = container_of(c, struct battery_chg_dev,
+						battery_class);
+	struct psy_state *pst = &bcdev->psy_list[PSY_TYPE_XM];
+	int rc;
+
+	rc = read_property_id(bcdev, pst, XM_PROP_FG1_AI);
+	if (rc < 0)
+		return rc;
+
+	return scnprintf(buf, PAGE_SIZE, "%d\n", pst->prop[XM_PROP_FG1_AI]);
+}
+static CLASS_ATTR_RO(fg1_ai);
+#endif
+
 static ssize_t fg1_fcc_soh_show(struct class *c, struct class_attribute *attr,
 				char *buf)
 {
@@ -3035,6 +3069,10 @@ static struct attribute *xiaomi_battery_class_attrs[] = {
 	&class_attr_fg1_tambient.attr,
 	&class_attr_fg1_tremq.attr,
 	&class_attr_fg1_tfullq.attr,
+#if defined(CONFIG_AI_RSOC)
+	&class_attr_fg1_rsoc.attr,
+	&class_attr_fg1_ai.attr,
+#endif
 #if defined(CONFIG_BQ_CLOUD_AUTHENTICATION)
 	&class_attr_server_sn.attr,
 	&class_attr_server_result.attr,
